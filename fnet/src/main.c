@@ -51,7 +51,7 @@ void print_free_mem() {
 }
 #endif
 
-#if FNET_CFG_IPV6
+#if FNET_CFG_IP6
 fnet_timer_desc_t ip6addr_timer;
 void print_ipv6_addr() {
 	struct fnet_netif_ip6_addr_info ip6_addr;
@@ -129,7 +129,7 @@ int main(void) {
 #if FREE_MEM_DEBUG
 	fnet_timer_new(20,&print_free_mem,0);
 #endif
-#if FNET_CFG_IPV6
+#if FNET_CFG_IP6
 	ip6addr_timer = fnet_timer_new(100,&print_ipv6_addr,0);
 #endif
 #if FNET_CFG_HTTP
