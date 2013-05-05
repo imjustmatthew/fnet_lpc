@@ -4,8 +4,6 @@
 #include "fnet_timer_prv.h"
 #include "fnet_isr.h"
 
-#include "lpc_debug.h"
-
 #ifdef FNET_LPC
 
 

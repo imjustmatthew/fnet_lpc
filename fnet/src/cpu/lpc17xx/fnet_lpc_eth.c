@@ -39,7 +39,6 @@
  */
 
 #include "fnet.h"
-#include "lpc_debug.h"
 
 #if FNET_LPC && FNET_CFG_ETH
 

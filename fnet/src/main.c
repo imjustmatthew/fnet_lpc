@@ -33,7 +33,6 @@ __CRP const unsigned int CRP_WORD = CRP_NO_CRP ;
 #include "fnet_timer_prv.h"
 
 #include "fnet_mempool.h"
-#include "lpc_debug.h"
 
 #if FNET_CFG_FS
 extern const struct fnet_fs_rom_image fnet_fs_image;
@@ -79,9 +78,6 @@ int main(void) {
 		fnet_cpu_serial_init(FNET_CFG_CPU_SERIAL_PORT_DEFAULT, 9600);
 		fnet_printf("123456789\n");
 
-#if LPC_DEBUG_LEDS
-		led_init();
-#endif
 		/* Enable interrupts */
 		//fnet_cpu_irq_enable(0);
 
@@ -138,10 +134,8 @@ int main(void) {
 	// Enter an infinite loop, just incrementing a counter
 	volatile static int x;
 	while(1) {
-		//led2_on();
 		fnet_poll_services();
 		x++;
-		//led2_off();
 	}
 	return 0 ;
 }
