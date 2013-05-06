@@ -53,14 +53,13 @@ static int fapp_http_cgi_graph_handle(char * query, long *cookie);
 static const struct fnet_http_cgi fapp_cgi_table[] =
 {
     {"stdata.cgi", fapp_http_cgi_stdata_handle, fapp_http_string_buffer_respond},
-    {"graph.cgi", fapp_http_cgi_graph_handle, fapp_http_string_buffer_respond},
 #if FNET_CFG_HTTP_POST
     {"post.cgi", fapp_http_cgi_post_handle, fapp_http_string_buffer_respond},
-#endif
+#endif /* FNET_CFG_HTTP_POST */
     {0, 0, 0} /* End of the table. */
 };
 
-#endif
+#endif /* FNET_CFG_HTTP_CGI */
 //struct sockaddr http_listen_all = {
 //		AF_INET,
 //		0,
@@ -95,7 +94,7 @@ void init_http() {
 
 #if FNET_CFG_HTTP_POST
 int fapp_http_cgi_post_handle(char * query, long *cookie);
-#endif
+#endif /* FNET_CFG_HTTP_POST */
 
 
 /* CGI table */
@@ -134,46 +133,9 @@ static int fapp_http_cgi_stdata_handle(char * query, long *cookie)
     return FNET_OK;
 }
 
-#define FAPP_HTTP_CGI_GRAPH_MIN     (30)
-static int fapp_http_cgi_rand_next;
-/************************************************************************
-* NAME: fapp_http_cgi_rand
-*
-* DESCRIPTION:
-*************************************************************************/
-static unsigned int fapp_http_cgi_rand(void)
-{
-  fapp_http_cgi_rand_next = fapp_http_cgi_rand_next * 11 + 12;
-  return (unsigned int)(((fapp_http_cgi_rand_next>>4) & 0xFF) + FAPP_HTTP_CGI_GRAPH_MIN);
-}
+#endif /* FNET_CFG_HTTP_CGI */
 
-/************************************************************************
-* NAME: fapp_http_cgi_graph_handle
-*
-* DESCRIPTION:
-*************************************************************************/
-static int fapp_http_cgi_graph_handle(char * query, long *cookie)
-{
-    int q1= (int)fapp_http_cgi_rand();
-    int q2= (int)fapp_http_cgi_rand();
-    int q3= (int)fapp_http_cgi_rand();
-    int q4= (int)fapp_http_cgi_rand();
-    int q5= (int)fapp_http_cgi_rand();
-
-    FNET_COMP_UNUSED_ARG(query);
-
-	/* Wrie to the temprorary buffer. */
-    fnet_snprintf(fapp_http_cgi_buffer, sizeof(fapp_http_cgi_buffer),
-                        "({\"q1\":%d,\"q2\":%d,\"q3\":%d,\"q4\":%d,\"q5\":%d})",
-                        q1, q2, q3, q4, q5);
-
-    *cookie = (long)fapp_http_cgi_buffer; /* Save fapp_http_cgi_buffer as cookie.*/
-
-    return FNET_OK;
-}
-
-#endif
-
+/* This reads the data stored in cookie and feeds it out as requested. */
 static unsigned long fapp_http_string_buffer_respond(char * buffer, unsigned long buffer_size, char * eof, long *cookie)
 {
     unsigned long result = 0;
@@ -183,7 +145,7 @@ static unsigned long fapp_http_string_buffer_respond(char * buffer, unsigned lon
     unsigned long send_size = fnet_strlen(string_buffer_ptr);
 
 
-    *eof = 1; /* No aditional send by default. */
+    *eof = 1; /* No additional send by default. */
 
     if(buffer && buffer_size)
     {
@@ -194,7 +156,7 @@ static unsigned long fapp_http_string_buffer_respond(char * buffer, unsigned lon
 
 	    string_buffer_ptr += send_size;
 	    if(*string_buffer_ptr!='\0') /* If any data for sending.*/
-	        *eof = 0;    /* Need more itteration. */
+	        *eof = 0;    /* Need more iteration. */
 
 	    result = send_size;
 
@@ -204,4 +166,4 @@ static unsigned long fapp_http_string_buffer_respond(char * buffer, unsigned lon
     return result;
 }
 
-#endif
+#endif /* FNET_CFG_HTTP */
