@@ -132,11 +132,9 @@ int main(void) {
 #if FNET_CFG_HTTP
 	init_http();
 #endif
-	// Enter an infinite loop, just incrementing a counter
-	volatile static int x;
+	// Enter an infinite loop
 	while(1) {
 		fnet_poll_services();
-		x++;
 	}
 	return 0 ;
 }
