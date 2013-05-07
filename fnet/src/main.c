@@ -88,7 +88,6 @@ int main(void) {
 		}
 
 	fnet_netif_desc_t netif;
-	struct fnet_dhcp_params dhcp_params;
 	// Get current net interface.
 	if ((netif = fnet_netif_get_default()) == 0) {
 		fnet_printf("ERROR: Network Interface is not configurated!");
@@ -98,8 +97,9 @@ int main(void) {
 		} else {
 			fnet_printf("ARP init fail\n");
 		}
+#if FNET_CFG_DHCP
+		struct fnet_dhcp_params dhcp_params;
 		fnet_memset_zero(&dhcp_params, sizeof(struct fnet_dhcp_params));
-
 		fnet_println("DHCP ");
 		// Enable DHCP client.
 		if (fnet_dhcp_init(netif, &dhcp_params) != FNET_ERR) {
@@ -107,6 +107,7 @@ int main(void) {
 		} else {
 			fnet_println(" fail!");
 		}
+#endif /* FNET_CFG_DHCP */
 #if FNET_CFG_FS
 		fnet_printf("FS init ");
 		if (fnet_fs_init() != FNET_ERR) {
