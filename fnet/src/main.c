@@ -120,7 +120,7 @@ int main(void) {
 		} else {
 			fnet_printf("fail\n");
 		}
-#endif
+#endif /* FNET_CFG_FS */
 	}
 
 #if FREE_MEM_DEBUG
